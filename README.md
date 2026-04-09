@@ -1,13 +1,42 @@
 # corpus_cluster_explorer
 
-Python package for loading, preprocessing, and clustering structured text datasets.
+`corpus_cluster_explorer` — это Python-пакет для загрузки, предобработки и кластеризации **структурированных текстовых датасетов**.
 
-## Features
+Пакет поддерживает два основных сценария работы:
 
-- loading structured datasets
-- text field detection
-- preprocessing and normalization
-- bigram extraction
-- Word2Vec embeddings
-- KMeans clustering
-- export of tokenized and cluster-labeled corpora
+1. **Полный пайплайн**  
+   Загрузка структурированного датасета, автоматическое обнаружение текстовых полей, выбор полей для анализа, токенизация корпуса, извлечение биграмм, обучение Word2Vec, оценка качества кластеризации, запуск KMeans и экспорт результатов.
+
+2. **Продолжение работы с токенизированного корпуса**  
+   Загрузка ранее сохранённого токенизированного корпуса в формате JSONL и продолжение анализа сразу с этапа эмбеддингов и кластеризации.
+
+## Возможности
+
+- загрузка структурированных текстовых датасетов:
+  - JSONL
+  - JSON
+  - CSV
+  - TSV
+- автоматическое обнаружение текстовых полей
+- предобработка текста:
+  - приведение к нижнему регистру
+  - удаление ссылок
+  - удаление `@username`
+  - удаление хэштегов
+  - очистка пунктуации
+  - лемматизация русских слов с помощью `pymorphy3`
+- извлечение биграмм с помощью `gensim.Phrases`
+- обучение Word2Vec
+- кластеризация с помощью KMeans
+- оценка качества кластеризации через silhouette score
+- PCA-проекция для визуализации
+- экспорт:
+  - токенизированного корпуса
+  - корпуса с кластерной разметкой
+
+## Установка
+
+### Установка из GitHub
+
+```bash
+pip install git+https://github.com/YOUR_USERNAME/corpus_cluster_explorer.git

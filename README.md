@@ -40,3 +40,113 @@
 
 ```bash
 pip install git+https://github.com/YOUR_USERNAME/corpus_cluster_explorer.git
+```
+
+### Локальная editable-установка
+
+```bash
+pip install -e .
+```
+
+## Быстрый старт
+
+### 1. Полный пайплайн
+
+```python
+from corpus_cluster_explorer import CorpusExplorer
+
+explorer = CorpusExplorer()
+
+explorer.load("posts.jsonl")
+print(explorer.text_fields)
+
+explorer.choose_fields(["text", "comments_text"])
+explorer.tokenize()
+explorer.save_tokenized("tokenized.jsonl")
+
+explorer.fit_embeddings()
+explorer.evaluate_clusters()
+explorer.cluster(4)
+
+explorer.save_clustered("clustered.jsonl")
+```
+
+### 2. Продолжение работы с токенизированного корпуса
+
+```python
+from corpus_cluster_explorer import CorpusExplorer
+
+explorer = CorpusExplorer()
+
+explorer.load_tokenized("tokenized.jsonl")
+
+explorer.fit_embeddings()
+explorer.evaluate_clusters()
+explorer.cluster(4)
+
+explorer.save_clustered("clustered.jsonl")
+```
+
+## Обзор API
+
+### Загрузка
+
+```python
+explorer.load("data.jsonl")
+explorer.text_fields
+```
+
+### Выбор полей
+
+```python
+explorer.choose_fields(["text", "comments_text"])
+```
+
+### Токенизация
+
+```python
+explorer.tokenize()
+```
+
+### Статистика
+
+```python
+explorer.token_stats()
+```
+
+### Кластеризация
+
+```python
+explorer.fit_embeddings()
+explorer.evaluate_clusters()
+explorer.cluster(4)
+```
+
+### Сохранение
+
+```python
+explorer.save_tokenized("tokenized.jsonl")
+explorer.save_clustered("clustered.jsonl")
+```
+
+## CLI
+
+```bash
+corpus-explorer data.jsonl --fields text comments_text --clusters 4
+```
+
+## Форматы
+
+**Tokenized JSONL**:
+- tokens
+- combined_text
+- field_text_map
+
+**Clustered JSONL**:
+- tokens
+- cluster_ids
+- cluster_labels
+
+## Лицензия
+
+MIT

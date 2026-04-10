@@ -10,6 +10,8 @@
 2. **Продолжение работы с токенизированного корпуса**  
    Загрузка ранее сохранённого токенизированного корпуса в формате JSONL и продолжение анализа сразу с этапа эмбеддингов и кластеризации.
 
+---
+
 ## Возможности
 
 - загрузка структурированных текстовых датасетов:
@@ -25,53 +27,64 @@
   - удаление хэштегов
   - очистка пунктуации
   - лемматизация русских слов с помощью `pymorphy3`
-- извлечение биграмм с помощью `gensim.Phrases`
+- извлечение биграмм (`gensim.Phrases`)
 - обучение Word2Vec
-- кластеризация с помощью KMeans
-- оценка качества кластеризации через silhouette score
-- PCA-проекция для визуализации
+- кластеризация (KMeans)
+- оценка качества (silhouette score)
+- PCA для визуализации
 - экспорт:
   - токенизированного корпуса
   - корпуса с кластерной разметкой
 
+---
+
 ## Установка
 
-### Установка из GitHub
-
 ```bash
-pip install git+https://github.com/YOUR_USERNAME/corpus_cluster_explorer.git
+pip install corpus-cluster-explorer
 ```
 
-### Локальная editable-установка
-
-```bash
-pip install -e .
-```
+---
 
 ## Быстрый старт
 
-### 1. Полный пайплайн
+### Полный пайплайн
 
 ```python
 from corpus_cluster_explorer import CorpusExplorer
 
 explorer = CorpusExplorer()
 
-explorer.load("posts.jsonl")
+# загрузка данных
+explorer.load("data.jsonl")
+
+# посмотреть какие текстовые поля найдены
 print(explorer.text_fields)
 
-explorer.choose_fields(["text", "comments_text"])
+# выбрать поля
+explorer.choose_fields(explorer.text_fields)
+
+# токенизация
 explorer.tokenize()
+
+# сохранить при необходимости
 explorer.save_tokenized("tokenized.jsonl")
 
+# эмбеддинги + подбор кластеров
 explorer.fit_embeddings()
-explorer.evaluate_clusters()
+valid_k, scores = explorer.evaluate_clusters()
+print(valid_k, scores)
+
+# кластеризация
 explorer.cluster(4)
 
+# сохранить результат
 explorer.save_clustered("clustered.jsonl")
 ```
 
-### 2. Продолжение работы с токенизированного корпуса
+---
+
+### Продолжение с токенизированного корпуса
 
 ```python
 from corpus_cluster_explorer import CorpusExplorer
@@ -81,13 +94,15 @@ explorer = CorpusExplorer()
 explorer.load_tokenized("tokenized.jsonl")
 
 explorer.fit_embeddings()
-explorer.evaluate_clusters()
-explorer.cluster(4)
+valid_k, scores = explorer.evaluate_clusters()
 
+explorer.cluster(4)
 explorer.save_clustered("clustered.jsonl")
 ```
 
-## Обзор API
+---
+
+## API
 
 ### Загрузка
 
@@ -99,7 +114,13 @@ explorer.text_fields
 ### Выбор полей
 
 ```python
-explorer.choose_fields(["text", "comments_text"])
+explorer.choose_fields(["text"])
+```
+
+или
+
+```python
+explorer.choose_fields(explorer.text_fields)
 ```
 
 ### Токенизация
@@ -129,23 +150,39 @@ explorer.save_tokenized("tokenized.jsonl")
 explorer.save_clustered("clustered.jsonl")
 ```
 
+---
+
 ## CLI
 
 ```bash
 corpus-explorer data.jsonl --fields text comments_text --clusters 4
 ```
 
-## Форматы
+---
 
-**Tokenized JSONL**:
-- tokens
-- combined_text
-- field_text_map
+## Форматы данных
 
-**Clustered JSONL**:
-- tokens
-- cluster_ids
-- cluster_labels
+### Tokenized JSONL
+- tokens  
+- combined_text  
+- field_text_map  
+
+### Clustered JSONL
+- tokens  
+- cluster_ids  
+- cluster_labels  
+
+---
+
+## Замечания
+
+- русские слова лемматизируются  
+- нерусские токены сохраняются  
+- используются только **биграммы**  
+- можно продолжать работу с сохранённого токенизированного корпуса  
+- рекомендуется сначала посмотреть `explorer.text_fields`, затем выбирать поля  
+
+---
 
 ## Лицензия
 
